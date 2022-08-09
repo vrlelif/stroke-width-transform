@@ -2,18 +2,16 @@ import numpy as np
 
 def getDivision(x,y):
     try:
-        if(x/y <=3) or (y/x<=3):
-            return True
-        else:
-            return False
+            return (x/y <=3) or (y/x<=3)
     except Exception as e: 
         print(e)
 
 
-def CC(SWT, direction = 1 ):
+def CC(SWT, originalImage, direction = 1 ):
     label = 0  
     component_map =  np.zeros(SWT.shape)
     components = {}
+    componentFeatureList= {}
     eq_list = {}
 
     [strokePointsRow,strokePointsCol] =  np.where(SWT) 
@@ -110,7 +108,7 @@ def CC(SWT, direction = 1 ):
         
         median = np.median(arrS)
         diameter = np.sqrt( height ** 2 + width ** 2)
-        uniqueArr = np.unique(component_map[minY:maxY, minX:maxX])
+        uniqueArr = np.unique(component_map[minY:minY+height, minX:minX+width])
 
         '''CONDITIONS'''
         varianceRatio = (varianceV/averageV) <= 2 
@@ -120,10 +118,32 @@ def CC(SWT, direction = 1 ):
         widthV =  10 <= width <= 300
         compCount = len(uniqueArr[uniqueArr != 0]) <=3
 
+
         if varianceRatio and aspectRatio and diameterRatio and heightV and widthV and compCount:
             #result = cv2.rectangle(result, (minX,minY ), (minX + width ,minY+height), (255,0,255), 1)
             for p in components[eq_list[component]]:
-
                 newResult[p[0],p[1]] = eq_list[component]
+
+            arrY = sorted(components[eq_list[component]], key=lambda x: x[0])
+            arrX = sorted(components[eq_list[component]], key=lambda x: x[1])
+
+            minY  =  arrY[0][0]
+            maxY  =  arrY[len(arrY) - 1 ][0]
+            minX  =  arrX[0][1]
+            maxX  =  arrX[len(arrX) - 1 ][1]
+
+            height = maxY - minY + 1
+            width = maxX - minX + 1
+
+            comp = originalImage[minY:minY+height, minX:minX+width]
+        
+            avg_color_per_row = np.average(comp[newResult[minY:minY+height, minX:minX+width]> 0],axis=0)
+
+            avg_color = np.average(avg_color_per_row, axis=0)
+
+            componentFeatureList[eq_list[component]] = [median, height, minX, maxX, avg_color]
+        
+        
+
                 
-    return newResult, eq_list, components 
+    return newResult, components, componentFeatureList 
