@@ -1,4 +1,4 @@
-import numpy as np  # numpy library to be able to play with arrays
+import numpy as np
 
 def getDivision(x,y):
     try:
@@ -6,7 +6,8 @@ def getDivision(x,y):
             return True
         else:
             return False
-    except Exception as e: print(e)
+    except Exception as e: 
+        print(e)
 
 
 def CC(SWT, direction = 1 ):
@@ -15,11 +16,10 @@ def CC(SWT, direction = 1 ):
     components = {}
     eq_list = {}
 
-    [strokePointsRow,strokePointsCol] =  np.where(SWT) #get the stroke existing points
+    [strokePointsRow,strokePointsCol] =  np.where(SWT) 
 
     for index,y in enumerate(strokePointsRow):
         x = strokePointsCol[index]
-        # do something with the pixel at position (x, y)
         try:
             strokeOfPixel = SWT[y,x] * direction
 
@@ -28,7 +28,7 @@ def CC(SWT, direction = 1 ):
             topLeft = component_map[y-1,x-1] 
             topRight = component_map[y-1,x+1]
 
-            nolabeledNeighbours = leftN == 0 and aboveN == 0 and topLeft == 0 and topRight == 0
+            nolabeledNeighbours = sum([leftN,aboveN,topLeft,topRight]) == 0
             
             nLabels = []
 
@@ -42,14 +42,16 @@ def CC(SWT, direction = 1 ):
                         nLabels.append(component_map[y-1,x-1])
                     if(topRight > 0  and getDivision(topRight,strokeOfPixel)):
                         nLabels.append(component_map[y-1,x+1])
+
+                    ref = eq_list[min(nLabels)]
                         
                     for n in nLabels:
-                        if eq_list[n] > int(min(nLabels)):
-                            eq_list[n] = int(eq_list[min(nLabels)])
+                        if eq_list[n] > min(nLabels):
+                            eq_list[n] = ref
 
-                    component_map[y,x] = int(eq_list[min(nLabels)])
+                    component_map[y,x] = ref
 
-                    components[int(eq_list[min(nLabels)])].append([y,x])
+                    components[ref].append([y,x])
 
                 elif nolabeledNeighbours:
                     
@@ -71,30 +73,57 @@ def CC(SWT, direction = 1 ):
     [componentPointsRow,componentPointsCol] =  np.where(component_map) #get the label existing points
 
     for index,y in enumerate(componentPointsRow):
-    
-
         x = componentPointsCol[index]
 
         try:
             if component_map[y,x] > 0:
-                ''''
-                left = component_map[y,x-1]
-                above = component_map[y-1,x]
-                right = component_map[y,x+1]
-                bottom = component_map[y+1,x]
-                topLeft = component_map[y-1,x-1]
-                topRight = component_map[y-1,x+1]
-                bottomRight = component_map[y+1,x+1]
-                bottomLeft = component_map[y+1,x-1]
-                neighbourLabels = [x for x in [left,right,above,bottom,topLeft,topRight,bottomLeft,bottomRight] if x != 0]
-                '''
                 val = component_map[y,x]
                 if component_map[y,x] > eq_list[val]:
                     component_map[y,x] = eq_list[val]
 
-                components[int(eq_list[val])].append([y,x])
+                components[eq_list[val]].append([y,x])
             
         except IndexError:
             continue
+
+    newResult  =  np.zeros(component_map.shape)
+
+    for component in list(components):
+        '''calculate variance rate'''
+        arrS = [SWT[p[0], p[1]] for p in components[component]]
         
-    return component_map, eq_list, components
+        arrY = sorted(components[component], key=lambda x: x[0])
+        arrX = sorted(components[component], key=lambda x: x[1])
+
+        minY  =  arrY[0][0]
+        maxY  =  arrY[len(arrY) - 1 ][0]
+        minX  =  arrX[0][1]
+        maxX  =  arrX[len(arrX) - 1 ][1]
+
+        height = maxY - minY + 1
+        width = maxX - minX + 1
+
+        aspect = width  / height
+
+        varianceV = np.var(arrS)
+        averageV = np.mean(arrS)
+        
+        median = np.median(arrS)
+        diameter = np.sqrt( height ** 2 + width ** 2)
+        uniqueArr = np.unique(component_map[minY:maxY, minX:maxX])
+
+        '''CONDITIONS'''
+        varianceRatio = (varianceV/averageV) <= 2 
+        aspectRatio = 0.1 <= aspect <= 10
+        diameterRatio = (median / diameter) <= 15.00
+        heightV = 10 <= height <= 300
+        widthV =  10 <= width <= 300
+        compCount = len(uniqueArr[uniqueArr != 0]) <=3
+
+        if varianceRatio and aspectRatio and diameterRatio and heightV and widthV and compCount:
+            #result = cv2.rectangle(result, (minX,minY ), (minX + width ,minY+height), (255,0,255), 1)
+            for p in components[eq_list[component]]:
+
+                newResult[p[0],p[1]] = eq_list[component]
+                
+    return newResult, eq_list, components 

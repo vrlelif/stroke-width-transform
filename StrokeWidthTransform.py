@@ -1,15 +1,15 @@
 import numpy as np
 
-def SWT_apply(edgeImage,SW_Map,gradientDirections , direction = 1):
+def SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1):
 
     edgePointRows, edgePointCols =  np.nonzero(edgeImage) 
   
-    rays = []
+    rays = [] 
 
-     
     for index,j in enumerate(edgePointRows):
         
         i = edgePointCols[index]
+
         startGradient = gradientDirections[j, i]  
 
         startX = np.cos(startGradient)
@@ -19,7 +19,7 @@ def SWT_apply(edgeImage,SW_Map,gradientDirections , direction = 1):
 
         ray = [(j, i)]
         
-        while True:
+        while True: # TODO:  FIND A VALUE TO LIMIT STROKE WIDTH
             x_q = np.int32(round(i + (direction * startX * steps)))
             y_q = np.int32(round(j + (direction * startY * steps)))
 
@@ -32,12 +32,13 @@ def SWT_apply(edgeImage,SW_Map,gradientDirections , direction = 1):
 
             if edgeImage[y_q, x_q] > 0:
     
-                ray_length = np.sqrt( (x_q - i) ** 2 + (y_q - j) ** 2)
+                strokeW = np.sqrt( (x_q - i) ** 2 + (y_q - j) ** 2)
+
                 theta = np.abs(np.abs(startGradient - gradientDirections[y_q, x_q]) - np.pi)
 
                 if theta <= np.pi / 2:
                     for ry, rx in ray:
-                        SW_Map[ry, rx] = min(SW_Map[ry, rx], ray_length)
+                        SW_Map[ry, rx] = min(SW_Map[ry, rx], strokeW)
                     rays.append(ray) 
                 break
             
@@ -49,7 +50,6 @@ def SWT_apply(edgeImage,SW_Map,gradientDirections , direction = 1):
 
     SW_Map[SW_Map == np.Infinity] = 0
  
-    
 
     return SW_Map
 
