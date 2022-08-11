@@ -98,8 +98,3 @@ print(groupG(pairs))
 
 imgplot2 = plt.imshow(component_map)
 plt.show()
-
-
-
-
-
