@@ -83,6 +83,7 @@ def CC(SWT, originalImage, direction = 1 ):
             continue
 
     components = {k: v for k, v in components.items() if len(v) > 1}
+    
 
 
     return component_map,components
