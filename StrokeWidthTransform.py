@@ -52,4 +52,3 @@ def SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1):
  
 
     return SW_Map
-
