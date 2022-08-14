@@ -6,11 +6,10 @@ def getDivision(x,y):
     except Exception as e: 
         print(e)
 
-def CC(SWT, originalImage, direction = 1 ):
+def CC(SWT, direction = 1 ):
     label = 0  
     component_map =  np.zeros(SWT.shape)
     components = {}
-    componentFeatureList= {}
     eq_list = {}
     [strokePointsRow,strokePointsCol] =  np.where(SWT) 
     for index,y in enumerate(strokePointsRow):

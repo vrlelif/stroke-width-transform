@@ -1,8 +1,3 @@
-from matplotlib import pyplot as plt
-from StrokeWidthTransform import SWT_apply
-from connectedComponent import CC
-from readImage import Read
-import timeit
 import numpy as np
 
 def findLetterCandidates(component_map, components , SWTResult, originalImage):

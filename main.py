@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from StrokeWidthTransform import SWT_apply
+from strokeWidthTransform import SWT_apply
 from connectedComponent import CC
 from findLetterCandidates import findLetterCandidates
 from readImage import Read
@@ -27,7 +27,7 @@ print("SWT done in :", timeit.default_timer() - starttime)
 
 starttime = timeit.default_timer()
 
-component_map , components  = CC(SWTResult,originalImage)
+component_map , components  = CC(SWTResult)
 
 print("CC done in:", timeit.default_timer() - starttime)
 
