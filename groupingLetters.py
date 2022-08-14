@@ -5,10 +5,8 @@ from readImage import Read
 import timeit
 import numpy as np
 
-
 def findDistance(co1,co2):
     widerCompWidth = min(co1['width'],co2['width'])
-
     if co1['minY'] >= co2['maxY'] or co2['minY'] >= co1['maxY']:
         return False
     else:
@@ -27,7 +25,6 @@ def findPairs(components):
             colors = np.mean(components[co]['avgColor']) / np.mean(components[can]['avgColor']) <= 3 
             if (strokeM and heights and distance and colors):
                 pairs.append([co,can])
-
     return pairs
 
 def groupG(pairs):
@@ -48,4 +45,3 @@ def groupG(pairs):
         return groupsFiltered
     else: 
         return groupG(groups)
-
