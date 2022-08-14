@@ -43,9 +43,10 @@ pairs = findPairs(components)
 print("findPairs done in:", timeit.default_timer() - starttime)
 
 starttime = timeit.default_timer()
-pairs = groupG(pairs)
 
-print(pairs)
+groups = groupG(pairs)
+
+print(groups)
 
 print("groupPairs done in:", timeit.default_timer() - starttime)
 
