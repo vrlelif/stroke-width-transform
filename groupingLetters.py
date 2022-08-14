@@ -1,8 +1,3 @@
-from matplotlib import pyplot as plt
-from StrokeWidthTransform import SWT_apply
-from connectedComponent import CC
-from readImage import Read
-import timeit
 import numpy as np
 
 def findDistance(co1,co2):
@@ -28,7 +23,6 @@ def findPairs(components):
     return pairs
 
 def groupG(pairs):
-    lenBefore = len(pairs)
     groups = []
     if len(pairs) > 1:
         for i,pair in enumerate(pairs):

@@ -3,8 +3,8 @@ import numpy as np
 def getDivision(x,y):
     try:
         return (x/y <=3) or (y/x<=3)
-    except Exception as e: 
-        print(e)
+    except Exception: 
+        pass
 
 def CC(SWT, direction = 1 ):
     label = 0  

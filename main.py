@@ -46,9 +46,14 @@ starttime = timeit.default_timer()
 
 groups = groupG(pairs)
 
-print(groups)
 
 print("groupPairs done in:", timeit.default_timer() - starttime)
 
-imgplot2 = plt.imshow(component_map)
+final_image = np.zeros(component_map.shape)
+for group in groups:
+    for item in group:
+        labels = np.argwhere(component_map == item)
+        final_image[labels[:, 0], labels[:, 1]] = 1
+
+imgplot2 = plt.imshow(final_image)
 plt.show()
