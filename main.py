@@ -64,6 +64,7 @@ def bbox1(img):
 bb = bbox1(final_image)
 
 
+
 fig, ax = plt.subplots()
 ax.imshow(cv2.cvtColor(originalImage, cv2.COLOR_BGR2RGB))
 #ax.imshow(component_map)
