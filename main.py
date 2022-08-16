@@ -6,6 +6,7 @@ from readImage import Read
 from groupingLetters import *
 import timeit
 import numpy as np
+import matplotlib.patches as patches
 
 imagePath = "images/800px-Text_on_a_coach.jpg"
 '''getting original image'''
@@ -55,5 +56,18 @@ for group in groups:
         labels = np.argwhere(component_map == item)
         final_image[labels[:, 0], labels[:, 1]] = 1
 
-imgplot2 = plt.imshow(final_image)
+def bbox1(img):
+    a = np.where(img != 0)
+    return [np.min(a[1]),np.min(a[0]) , np.max(a[1])-np.min(a[1]),np.max(a[0])-np.min(a[0])]
+
+bb = bbox1(final_image)
+
+fig, ax = plt.subplots()
+ax.imshow(final_image)
+
+rect = patches.Rectangle((bb[0], bb[1]), bb[2], bb[3], linewidth=1, edgecolor='r', facecolor='none')
+
+# Add the patch to the Axes
+ax.add_patch(rect)
+
 plt.show()
