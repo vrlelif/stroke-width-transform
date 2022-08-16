@@ -5,6 +5,7 @@ from findLetterCandidates import findLetterCandidates
 from readImage import Read
 from groupingLetters import *
 import timeit
+import cv2 
 import numpy as np
 import matplotlib.patches as patches
 
@@ -62,12 +63,15 @@ def bbox1(img):
 
 bb = bbox1(final_image)
 
+
 fig, ax = plt.subplots()
-ax.imshow(final_image)
+ax.imshow(cv2.cvtColor(originalImage, cv2.COLOR_BGR2RGB))
+#ax.imshow(component_map)
+
 
 rect = patches.Rectangle((bb[0], bb[1]), bb[2], bb[3], linewidth=1, edgecolor='r', facecolor='none')
 
-# Add the patch to the Axes
+# Add the bb to the Axes
 ax.add_patch(rect)
 
 plt.show()
