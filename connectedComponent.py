@@ -1,7 +1,7 @@
 import numpy as np
 
 def getDivision(x,y):
-    try:
+    try: 
         return (x/y <=3) or (y/x<=3)
     except Exception: 
         pass
