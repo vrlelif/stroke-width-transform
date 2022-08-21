@@ -7,9 +7,13 @@ from groupingLetters import *
 import timeit
 import cv2 
 import numpy as np
+
 import matplotlib.patches as patches
 
-imagePath = "images/800px-Text_on_a_coach.jpg"
+starttime2 = timeit.default_timer()
+
+
+imagePath = "images/COCO_train2014_000000025102.jpg"
 '''getting original image'''
 originalImage = Read.getImage(imagePath)
 '''getting image as grayscale'''
@@ -52,6 +56,7 @@ groups = groupG(pairs)
 print("groupPairs done in:", timeit.default_timer() - starttime)
 
 final_image = np.zeros(component_map.shape)
+
 for group in groups:
     for item in group:
         labels = np.argwhere(component_map == item)
@@ -60,6 +65,7 @@ for group in groups:
 def bbox1(img):
     a = np.where(img != 0)
     return [np.min(a[1]),np.min(a[0]) , np.max(a[1])-np.min(a[1]),np.max(a[0])-np.min(a[0])]
+
 
 bb = bbox1(final_image)
 
@@ -74,5 +80,9 @@ rect = patches.Rectangle((bb[0], bb[1]), bb[2], bb[3], linewidth=1, edgecolor='r
 
 # Add the bb to the Axes
 ax.add_patch(rect)
+print(f"Total TIME FOR {originalImage.shape[0]} x {originalImage.shape[1]} is { timeit.default_timer() - starttime2}" )
+
 
 plt.show()
+
+

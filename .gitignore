@@ -5,3 +5,5 @@ __pycache__/readImage.cpython-310.pyc
 __pycache__
 
 
+images/Thumbs.db
+.gitignore
