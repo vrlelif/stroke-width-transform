@@ -13,8 +13,6 @@ def SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1):
                 continue
 
         
-        #i = edgePointCols[index]
-
             startGradient = gradientDirections[j, i]  
 
             startX = np.cos(startGradient)
@@ -24,7 +22,7 @@ def SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1):
 
             ray = [(j, i)]
             
-            while  True: # TODO:  FIND A VALUE TO LIMIT STROKE WIDTH
+            while  True:
                 x_q = np.int32(round(i + (direction * startX * steps)))
                 y_q = np.int32(round(j + (direction * startY * steps)))
 
