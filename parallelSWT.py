@@ -1,11 +1,8 @@
 from multiprocessing import Pool
-from math import sqrt, floor
 from matplotlib import pyplot as plt
-from strokeWidthTransform import SWT_apply
-from connectedComponent import CC
 from groupingLetters import *
+from readImage import Read
 import numpy as np
-import multiprocessing
 import matplotlib.patches as patches
 
 imagePath = "images/800px-Text_on_a_coach.jpg"

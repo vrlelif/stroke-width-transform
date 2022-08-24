@@ -8,7 +8,6 @@ from groupingLetters import *
 import timeit
 import cv2 
 import numpy as np
-import multiprocessing
 import matplotlib.patches as patches
 
 if __name__ == '__main__':
@@ -74,6 +73,14 @@ if __name__ == '__main__':
 
 
     bb = bbox1(final_image)
+    '''
+    f = plt.figure()
+    f.add_subplot(1,2, 1)
+    plt.imshow(cv2.cvtColor(originalImage, cv2.COLOR_BGR2RGB))
+    f.add_subplot(1,2, 2)
+    plt.imshow(cv2.cvtColor(edgeImage, cv2.COLOR_BGR2RGB))
+    plt.show(block=True)
+    '''
 
 
 
