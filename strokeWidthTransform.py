@@ -7,9 +7,9 @@ def SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1):
     rays = [] 
 
     for index,j in enumerate(edgePointRows):
-        
-        i = edgePointCols[index]
 
+        i = edgePointCols[index]
+        
         startGradient = gradientDirections[j, i]  
 
         startX = np.cos(startGradient)

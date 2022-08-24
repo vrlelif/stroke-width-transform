@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.patches as patches
 import timeit
 
-imagePath = "scene2/ryoungt_13.08.2002/dPICT0047.JPG"
+imagePath = "scene2/ryoungt_05.08.2002/PICT0017.JPG"
 '''getting original image'''
 originalImage = Read.getImage(imagePath)
 '''getting image as grayscale'''

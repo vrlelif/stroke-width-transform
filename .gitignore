@@ -3,5 +3,9 @@ __pycache__/readImage.cpython-310.pyc
 __pycache__/groupingLetters.cpython-310.pyc
 __pycache__/readImage.cpython-310.pyc
 __pycache__
-images/Thumbs.db
-sleeper/Thumbs.db
+images
+sleeper
+scene
+scene3
+scene2
+

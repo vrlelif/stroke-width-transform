@@ -53,7 +53,8 @@ def findLetterCandidates(component_map, components , SWTResult, originalImage):
             'minX' : min(c[:,1]),
             'maxY' :  max(c[:,0]),
             'minY' : min(c[:,0]),
-            'avgColor' : avg_color
+            'avgColor' : avg_color,
+            'locations' : c
         }
                 
     return newResult, features

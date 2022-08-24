@@ -17,7 +17,7 @@ def findPairs(components):
             strokeM = components[co]['medianS'] / components[can]['medianS']  <= 2
             heights = components[co]['height'] / components[can]['height']  <= 2
             distance =  findDistance(components[co],components[can])
-            colors = np.mean(components[co]['avgColor']) / np.mean(components[can]['avgColor']) <= 3 
+            colors = np.mean(components[co]['avgColor']) / np.mean(components[can]['avgColor']) <= 3
             if (strokeM and heights and distance and colors):
                 pairs.append([co,can])
     return pairs
