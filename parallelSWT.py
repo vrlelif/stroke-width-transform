@@ -1,23 +1,25 @@
-from multiprocessing import Pool
 from matplotlib import pyplot as plt
 from groupingLetters import *
 from readImage import Read
 import numpy as np
 import matplotlib.patches as patches
+import timeit
 
-imagePath = "images/800px-Text_on_a_coach.jpg"
-
+imagePath = "scene2/ryoungt_13.08.2002/dPICT0047.JPG"
+'''getting original image'''
 originalImage = Read.getImage(imagePath)
-
+'''getting image as grayscale'''
 grayImage = Read.getImageAsGrayScale(imagePath)
-
+'''calculating gradient directions'''
 gradientDirections = Read.getGradientDirections(grayImage) 
-
+'''detecting edge pixels'''
 edgeImage = Read.get_edges(grayImage) 
 
-SW_Map = Read.initialize_SW_Map(edgeImage)
-
 direction = 1
+
+starttime = timeit.default_timer()
+
+SW_Map = Read.initialize_SW_Map(edgeImage)
 
 
 def SWT_apply_parallel(arr):
@@ -79,24 +81,7 @@ def SWT_apply_parallel(arr):
 
 
     
-if __name__ == "__main__":
-    p = Pool(processes = 6)  
 
-    slices = p.map(SWT_apply_parallel,[  #TODO NEED TO WRITE A FUNCTION TO CALCULATE RANGES ACCORDING TO SIZE OF THE IMAGE
-
-    range(0, 101), 
-    range(100, 201),
-    range(200, 301),
-    range(300, 401),
-    range(400, 501),
-    range(500, 601)
-    ])
-
-
-    merged = np.concatenate(slices, axis=0)
-
-    imgplot = plt.imshow(merged)
-    plt.show()
 
  
 

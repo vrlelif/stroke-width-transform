@@ -3,62 +3,63 @@ from strokeWidthTransform import SWT_apply
 from connectedComponent import CC
 from findLetterCandidates import findLetterCandidates
 from readImage import Read
-#from parallelSWT import SWT_apply
+from parallelSWT import SWT_apply_parallel
+from multiprocessing import Pool
 from groupingLetters import *
 import timeit
 import cv2 
 import numpy as np
 import matplotlib.patches as patches
+from parallelSWT import originalImage
 
-if __name__ == '__main__':
-    starttime2 = timeit.default_timer()
+if __name__ == "__main__":
+
+    beginningTime = timeit.default_timer() #  LAUNCH TIMER
+
+    processesCount = 10 # DECLARE NUMBER OF PROCESSORS
+
+    p = Pool(processes = processesCount)   # CREATE POOL
+
+    #def getSlices(originalImage):
+    height = originalImage.shape[0] # GET THE HEIGHT OF THE IMAGE
+
+    ranges = [] # CREATE AN EMPTY ARRAY TO FILL WITH ROW SLICES FOR EACH PROCESSOR
+
+    for i in range(processesCount): # CREATE AND APPEND RANGES
+        steps = i*int(height/processesCount)
+        myRange = range(steps,steps+int(height/processesCount)+1) 
+        ranges.append(myRange)
 
 
-    imagePath = "images/800px-Text_on_a_coach.jpg"
-    '''getting original image'''
-    originalImage = Read.getImage(imagePath)
-    '''getting image as grayscale'''
-    grayImage = Read.getImageAsGrayScale(imagePath)
-    '''calculating gradient directions'''
-    gradientDirections = Read.getGradientDirections(grayImage) 
-    '''detecting edge pixels'''
-    edgeImage = Read.get_edges(grayImage) 
+    slices = p.map(SWT_apply_parallel,ranges) # CALL THE PROCESSORS 
     
+    SWTResult = np.concatenate(slices, axis=0) # MERGE THE RESULTS AND GET WHOLE IMAGE
 
-    starttime = timeit.default_timer()
+    print("SWT done in :", timeit.default_timer() - beginningTime) # PRINT SWT RUNNING TIME
 
-    SW_Map = Read.initialize_SW_Map(edgeImage)
+    starttime = timeit.default_timer() # LAUNCH THE TIMER
 
-    
+    component_map , components  = CC(SWTResult) # CALL THE CONNECTED COMPONENT
 
+    print("CC done in:", timeit.default_timer() - starttime)# PRINT CONNECTED COMPONENT RUNNING TIME
 
-    SWTResult = SWT_apply(edgeImage,SW_Map,gradientDirections)
+    starttime = timeit.default_timer() # LAUNCH THE TIMER
 
-    print("SWT done in :", timeit.default_timer() - starttime)
+    component_map , components = findLetterCandidates(component_map , components, SWTResult, originalImage)   # CALL FIND LETTER CANDIDATES
 
-    starttime = timeit.default_timer()
+    print("findLetterCandidates done in:", timeit.default_timer() - starttime)# PRINT FIND LETTER CANDIDATES RUNNING TIME
 
-    component_map , components  = CC(SWTResult)
+    starttime = timeit.default_timer()  # LAUNCH THE TIMER
 
-    print("CC done in:", timeit.default_timer() - starttime)
-
-    starttime = timeit.default_timer()
-
-    component_map , components = findLetterCandidates(component_map , components, SWTResult, originalImage)  
-
-    print("findLetterCandidates done in:", timeit.default_timer() - starttime)
-
-    starttime = timeit.default_timer()
-    pairs = findPairs(components)
+    pairs = findPairs(components) # CALL THE findPairs
 
     print("findPairs done in:", timeit.default_timer() - starttime)
 
-    starttime = timeit.default_timer()
+    starttime = timeit.default_timer()  # LAUNCH THE TIMER
 
-    groups = groupG(pairs)
+    groups = groupG(pairs) # CALL THE groupG
 
-
-    print("groupPairs done in:", timeit.default_timer() - starttime)
+    print("groupPairs done in:", timeit.default_timer() - starttime)# PRINT groupG RUNNING TIME
 
     final_image = np.zeros(component_map.shape)
 
@@ -71,8 +72,8 @@ if __name__ == '__main__':
         a = np.where(img != 0)
         return [np.min(a[1]),np.min(a[0]) , np.max(a[1])-np.min(a[1]),np.max(a[0])-np.min(a[0])]
 
-
     bb = bbox1(final_image)
+
     '''
     f = plt.figure()
     f.add_subplot(1,2, 1)
@@ -91,9 +92,8 @@ if __name__ == '__main__':
 
     rect = patches.Rectangle((bb[0], bb[1]), bb[2], bb[3], linewidth=1, edgecolor='r', facecolor='none')
 
-    # Add the bb to the Axes
     ax.add_patch(rect)
-    print(f"Total TIME FOR {originalImage.shape[0]} x {originalImage.shape[1]} is { timeit.default_timer() - starttime2}" )
+    print(f"Total TIME FOR {originalImage.shape[0]} x {originalImage.shape[1]} is { timeit.default_timer() - beginningTime} with {processesCount} processors" )
 
 
     plt.show()

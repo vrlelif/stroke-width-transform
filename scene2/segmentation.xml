@@ -7426,7 +7426,7 @@
     <resolution x="480" y="640" />
     <taggedRectangles>
       <taggedRectangle x="9.0" y="29.0" width="452.0" height="540.0" offset="0.0" rotation="0.0" userName="admin">
-        <tag>£99</tag>
+        <tag>ï¿½99</tag>
         <segmentation>
           <xOff>155.0</xOff>
           <xOff>301.0</xOff>
@@ -7704,7 +7704,7 @@
         </segmentation>
       </taggedRectangle>
       <taggedRectangle x="537.0" y="115.0" width="88.0" height="86.0" offset="0.0" rotation="0.0" userName="admin">
-        <tag>£9</tag>
+        <tag>ï¿½9</tag>
         <segmentation>
           <xOff>44.0</xOff>
         </segmentation>
@@ -8231,7 +8231,7 @@
         </segmentation>
       </taggedRectangle>
       <taggedRectangle x="294.0" y="388.0" width="130.0" height="42.0" offset="0.0" rotation="0.0" userName="admin">
-        <tag>£100</tag>
+        <tag>ï¿½100</tag>
         <segmentation>
           <xOff>33.0</xOff>
           <xOff>56.0</xOff>
