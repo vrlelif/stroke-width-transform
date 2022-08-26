@@ -1,8 +1,5 @@
-from matplotlib import pyplot as plt
-from strokeWidthTransform import SWT_apply
 from connectedComponent import CC
 from findLetterCandidates import findLetterCandidates
-from readImage import Read
 from parallelSWT import SWT_apply_parallel
 from parallelSWT import *
 from groupingLetters import *
@@ -10,7 +7,6 @@ from multiprocessing import Pool
 import timeit
 import cv2 
 import numpy as np
-import matplotlib.patches as patches
 if __name__ == "__main__":
 
     beginningTime = timeit.default_timer() #  LAUNCH TIMER
@@ -33,6 +29,7 @@ if __name__ == "__main__":
     
     SWTResult = np.concatenate(slices, axis=0) # MERGE THE RESULTS AND GET WHOLE IMAGE
     #SWTResult = SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1) # MERGE THE RESULTS AND GET WHOLE IMAGE
+
 
     print("SWT done in :", timeit.default_timer() - beginningTime) # PRINT SWT RUNNING TIME
 
@@ -63,7 +60,7 @@ if __name__ == "__main__":
     final_image = np.zeros(component_map.shape)
 
 
-    lines = []
+    points = []
 
     for group in groups:
 
@@ -80,8 +77,13 @@ if __name__ == "__main__":
 
         a = min(minimumXs),min(minimumYs)
         b = max(maximumXs),max(maximumYs)
+        cv2.rectangle(originalImage, a, b, color=(255,255,255), thickness=2)  
 
-        image = cv2.rectangle(originalImage, a, b, color=(255,255,255), thickness=2)  
+
+
+        
+
+
     
     '''
     f = plt.figure()
@@ -91,12 +93,11 @@ if __name__ == "__main__":
     plt.imshow(cv2.cvtColor(edgeImage, cv2.COLOR_BGR2RGB))
     plt.show(block=True)
     '''
-    image = cv2.rectangle(originalImage, a, b, color=(255, 0, 0), thickness=2)  
-    cv2.imshow("fdgdfg",image)
+    cv2.imshow("fdgdfg",originalImage)
     cv2.waitKey(0)
 
-    fig, ax = plt.subplots()
-    ax.imshow(cv2.cvtColor(originalImage, cv2.COLOR_BGR2RGB))
+    #fig, ax = plt.subplots()
+    #ax.imshow(cv2.cvtColor(originalImage, cv2.COLOR_BGR2RGB))
     #ax.imshow(component_map)
     '''
     rect = patches.Rectangle((bb[0], bb[1]), bb[2], bb[3], linewidth=1, edgecolor='r', facecolor='none')

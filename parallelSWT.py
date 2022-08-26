@@ -1,10 +1,8 @@
-from matplotlib import pyplot as plt
 from groupingLetters import *
 from readImage import Read
 import numpy as np
-import matplotlib.patches as patches
 import timeit
-imagePath = "images/800px-Text_on_a_coach.jpg"
+imagePath = "images/tiny (1).jpg"
 #imagePath = "scene2/ryoungt_05.08.2002/PICT0017.JPG"
 '''getting original image'''
 originalImage = Read.getImage(imagePath)
@@ -19,16 +17,13 @@ direction = 1
 
 starttime = timeit.default_timer()
 
-SW_Map = Read.initialize_SW_Map(edgeImage)
-
-
 def SWT_apply_parallel(arr):
-
+    copy_SW_Map = np.copy(Read.initialize_SW_Map(edgeImage))
     start , end =  arr[0], arr[len(arr)-1]
 
     parallelEdgeImage = edgeImage[start:end]
     parallelGradientDirections = gradientDirections[start:end]
-    parallelSW_Map = SW_Map[start:end]
+    # parallelSW_Map = SW_Map[start:end]
     
     edgePointRows, edgePointCols =  np.nonzero(parallelEdgeImage) 
 
@@ -64,20 +59,20 @@ def SWT_apply_parallel(arr):
 
                 if theta <= np.pi / 2:
                     for ry, rx in ray:
-                        SW_Map[ry, rx] = min(SW_Map[ry, rx], strokeW)
+                        copy_SW_Map[ry, rx] = min(copy_SW_Map[ry, rx], strokeW)
                     rays.append(ray) 
                 break
             
                 
     for ray in rays:
-        median = np.median([SW_Map[y, x] for (y, x) in ray])
+        median = np.median([copy_SW_Map[y, x] for (y, x) in ray])
         for (y, x) in ray:
-            SW_Map[y, x] = min(median, SW_Map[y, x]) 
+            copy_SW_Map[y, x] = min(median, copy_SW_Map[y, x]) 
 
-    SW_Map[SW_Map == np.Infinity] = 0
+    copy_SW_Map[copy_SW_Map == np.Infinity] = 0
  
 
-    return SW_Map[start:end]
+    return copy_SW_Map[start:end]
 
 
     
