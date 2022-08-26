@@ -19,7 +19,6 @@ if __name__ == "__main__":
 
     p = Pool(processes = processesCount)   # CREATE POOL
 
-    #def getSlices(originalImage):
     height = originalImage.shape[0] # GET THE HEIGHT OF THE IMAGE
 
     ranges = [] # CREATE AN EMPTY ARRAY TO FILL WITH ROW SLICES FOR EACH PROCESSOR

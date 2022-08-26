@@ -4,8 +4,8 @@ from readImage import Read
 import numpy as np
 import matplotlib.patches as patches
 import timeit
-
-imagePath = "scene2/ryoungt_05.08.2002/PICT0017.JPG"
+imagePath = "images/800px-Text_on_a_coach.jpg"
+#imagePath = "scene2/ryoungt_05.08.2002/PICT0017.JPG"
 '''getting original image'''
 originalImage = Read.getImage(imagePath)
 '''getting image as grayscale'''
@@ -47,37 +47,37 @@ def SWT_apply_parallel(arr):
         
         while  True: # TODO:  FIND A VALUE TO LIMIT STROKE WIDTH
             x_q = np.int32(round(pos[1] + (direction * startX * steps)))
-            y_q = np.int32(round(pos[0] + (direction * startY * steps)))
+            y_q = np.int32(round((pos[0]+start) + (direction * startY * steps)))
 
             steps = steps + 1
 
-            if not (0 <= x_q < parallelEdgeImage.shape[1] and 0 <= y_q < parallelEdgeImage.shape[0]):
+            if not (0 <= x_q < edgeImage.shape[1] and 0 <= y_q < edgeImage.shape[0]):
                 break
             
             ray.append((y_q, x_q))
 
-            if parallelEdgeImage[y_q, x_q] > 0:
+            if edgeImage[y_q, x_q] > 0:
     
-                strokeW = np.sqrt( (x_q - pos[1]) ** 2 + (y_q - pos[0]) ** 2)
+                strokeW = np.sqrt( (x_q - pos[1]) ** 2 + (y_q -( pos[0]+start)) ** 2)
 
-                theta = np.abs(np.abs(startGradient - parallelGradientDirections[y_q, x_q]) - np.pi)
+                theta = np.abs(np.abs(startGradient - gradientDirections[y_q, x_q]) - np.pi)
 
                 if theta <= np.pi / 2:
                     for ry, rx in ray:
-                        parallelSW_Map[ry, rx] = min(parallelSW_Map[ry, rx], strokeW)
+                        SW_Map[ry, rx] = min(SW_Map[ry, rx], strokeW)
                     rays.append(ray) 
                 break
             
                 
     for ray in rays:
-        median = np.median([parallelSW_Map[y, x] for (y, x) in ray])
+        median = np.median([SW_Map[y, x] for (y, x) in ray])
         for (y, x) in ray:
-            parallelSW_Map[y, x] = min(median, parallelSW_Map[y, x]) 
+            SW_Map[y, x] = min(median, SW_Map[y, x]) 
 
-    parallelSW_Map[parallelSW_Map == np.Infinity] = 0
+    SW_Map[SW_Map == np.Infinity] = 0
  
 
-    return parallelSW_Map
+    return SW_Map[start:end]
 
 
     
