@@ -34,6 +34,7 @@ if __name__ == "__main__":
 
 
     print("SWT done in :", timeit.default_timer() - beginningTime) # PRINT SWT RUNNING TIME
+    
 
     starttime = timeit.default_timer() # LAUNCH THE TIMER
 
