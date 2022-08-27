@@ -1,3 +1,5 @@
+from matplotlib import pyplot as plt
+from strokeWidthTransform import SWT_apply
 from connectedComponent import CC
 from findLetterCandidates import findLetterCandidates
 from parallelSWT import SWT_apply_parallel
@@ -11,7 +13,7 @@ if __name__ == "__main__":
 
     beginningTime = timeit.default_timer() #  LAUNCH TIMER
 
-    processesCount = 10 # DECLARE NUMBER OF PROCESSORS
+    processesCount = 1 # DECLARE NUMBER OF PROCESSORS
 
     p = Pool(processes = processesCount)   # CREATE POOL
 
@@ -77,12 +79,7 @@ if __name__ == "__main__":
 
         a = min(minimumXs),min(minimumYs)
         b = max(maximumXs),max(maximumYs)
-        cv2.rectangle(originalImage, a, b, color=(255,255,255), thickness=2)  
-
-
-
-        
-
+        originalImage = cv2.rectangle(originalImage, a, b, color=(0,0,255), thickness=2)  
 
     
     '''

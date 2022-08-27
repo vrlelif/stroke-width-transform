@@ -11,7 +11,7 @@ def findLetterCandidates(component_map, components , SWTResult, originalImage):
         aspect = width  / height
         varianceV = np.var(arrS)
         averageV = np.mean(arrS)
-        
+                
         median = np.median(arrS)
         diameter = np.sqrt( height ** 2 + width ** 2)
         componentArea = component_map[ min(c[:,0]): min(c[:,0]) + height, min(c[:,1]):min(c[:,1] ) + width]
@@ -24,6 +24,7 @@ def findLetterCandidates(component_map, components , SWTResult, originalImage):
         heightV = 10 <= height <= 300
         widthV =  10 <= width <= 300
         compCount = len(uniqueArr[uniqueArr != 0]) <=3
+        '''
         if not varianceRatio :
             continue
         if not  aspectRatio :
@@ -36,6 +37,7 @@ def findLetterCandidates(component_map, components , SWTResult, originalImage):
             continue
         if not  compCount: 
             continue
+        '''
 
         for p in components[component]:
             newResult[p[0],p[1]] = component
