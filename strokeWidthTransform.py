@@ -13,7 +13,7 @@ def SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1):
         startGradient = gradientDirections[j, i]  
 
         startX = np.cos(startGradient)
-        startY = np.sin(startGradient)
+        startY = np.sin(startGradient)    
 
         steps = 1
 
