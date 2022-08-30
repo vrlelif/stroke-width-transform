@@ -2,7 +2,7 @@ from groupingLetters import *
 from readImage import Read
 import numpy as np
 import timeit
-imagePath = "images/1200px-Text_on_a_coach.jpg"
+imagePath = "images/tiny.jpg"
 #imagePath = "scene2/ryoungt_05.08.2002/PICT0017.JPG" 
 '''getting original image'''
 originalImage = Read.getImage(imagePath)
@@ -11,7 +11,7 @@ grayImage = Read.getImageAsGrayScale(imagePath)
 '''calculating gradient directions'''
 gradientDirections = Read.getGradientDirections(grayImage) 
 '''detecting edge pixels'''
-edgeImage = Read.get_edges(grayImage) 
+edgeImage = Read.get_edges_Otsu(grayImage) 
 
 direction = 1
 
