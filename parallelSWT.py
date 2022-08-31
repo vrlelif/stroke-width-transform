@@ -1,7 +1,7 @@
 from groupingLetters import *
 from readImage import Read
 import numpy as np
-import timeit
+
 imagePath = "images/tiny.jpg"
 #imagePath = "scene2/ryoungt_05.08.2002/PICT0017.JPG" 
 '''getting original image'''
@@ -15,7 +15,6 @@ edgeImage = Read.get_edges_Otsu(grayImage)
 
 direction = 1
 
-starttime = timeit.default_timer()
 
 def SWT_apply_parallel(arr):
     copy_SW_Map = np.copy(Read.initialize_SW_Map(edgeImage))

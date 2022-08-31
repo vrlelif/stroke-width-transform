@@ -24,8 +24,24 @@ def findPairs(components):
                 pairs.append((co,can))
     return pairs
 
+def findPairsAlternative(components):
+    L = list(components.keys())
+
+    edges = [(x,y) for x in L for y in L if 
+    components[x]['medianS'] / components[y]['medianS']  <= 2 and 
+    components[x]['height'] / components[y]['height']  <= 2 and 
+    findDistance(components[x],components[y]) and 
+    mean(components[x]['avgColor']) / mean(components[y]['avgColor']) <= 3 and 
+    x!=y]
+    return edges
+
 def groupG(pairs):
     edges = pairs
     graph = nx.Graph(edges) 
     return [tuple(c) for c in nx.connected_components(graph)]
+
+def groupingLettersIntoTextLines(components):
+    pairs = findPairsAlternative(components)
+    return groupG(pairs)
+
     

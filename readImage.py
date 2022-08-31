@@ -11,13 +11,13 @@ class Read:
         return image
 
     def get_edges(im, lo: float = 200, hi: float = 300, window: int = 3):
-        edges = cv2.Canny(im, lo, hi, apertureSize=window)
+        edges = cv2.Canny(im, lo, hi, apertureSize=window,L2gradient=True)
         return edges
 
     def get_edges_Otsu(im):
         blur = cv2.GaussianBlur(im,(5,5),0)
         th,otsuResult = cv2.threshold(blur,0,255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        edges = cv2.Canny(otsuResult, th, 255, 5)
+        edges = cv2.Canny(otsuResult, th, th*5, 5)
         return edges
         
         

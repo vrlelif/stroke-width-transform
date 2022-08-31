@@ -25,6 +25,7 @@ def findLetterCandidates(component_map, components , SWTResult, originalImage):
         widthV =  10 <= width <= 300
         compCount = len(uniqueArr[uniqueArr != 0]) <=3
         
+        
         if not varianceRatio :
             continue
         if not  aspectRatio :
