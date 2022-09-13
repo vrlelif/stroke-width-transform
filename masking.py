@@ -1,39 +1,60 @@
-from groupingLetters import groupingLettersIntoTextLines
+from groupingLettersIntoTextLines import groupingLettersIntoTextLines
 import numpy as np
-from PIL import Image
 import cv2 
-from parallelSWT import edgeImage
+import timeit
 
 
-def masking(component_map, components, originalImage):
+def masking(components, originalImage):
+
+    starttime = timeit.default_timer()
+
 
     groups = groupingLettersIntoTextLines(components)
 
-    final_image = np.zeros(component_map.shape)
+    print("GLITL:", timeit.default_timer() - starttime)
+
+
+    final_image = np.zeros(originalImage.shape)
 
     points = []
 
-    for group in groups:
+    arr = []
 
-        minimumXs = []
-        minimumYs = []
-        maximumXs = []
-        maximumYs = []
+    if len(groups)>0:
+        for group in groups:
+            minimumXs = []
+            minimumYs = []
+            maximumXs = []
+            maximumYs = []
 
-        for el in group:
-            minimumXs.append(components[el]['minX'])
-            minimumYs.append(components[el]['minY'])
-            maximumXs.append(components[el]['maxX'])
-            maximumYs.append(components[el]['maxY'])
+            for el in group:
+                minimumXs.append(components[el]['minX'])
+                minimumYs.append(components[el]['minY'])
+                maximumXs.append(components[el]['maxX'])
+                maximumYs.append(components[el]['maxY'])
 
-        a = min(minimumXs),min(minimumYs)
-        b = max(maximumXs),max(maximumYs)
+            a = min(minimumXs),min(minimumYs)
+            b = max(maximumXs),max(maximumYs)
+            
+            print(f"X= {a[0]} , Y= {a[1]} , WIDTH= {b[0]-a[0]+1}, HEIGHT= {b[1]-a[1]+1}")
 
-        im = Image.fromarray(component_map)
+            #im = Image.fromarray(component_map)
 
-        result = cv2.rectangle(originalImage, a, b, color=(0,0,255), thickness=2)  
-        #contours, hierarchy = cv2.findContours(image=edgeImage, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
+            result = cv2.rectangle(originalImage, a, b, color=(0,255,0), thickness=1)  
 
-        #result = cv2.drawContours(image=originalImage.copy(), contours=contours, contourIdx=-1, color=(0, 255, 0), thickness=2, lineType=cv2.LINE_AA)
+            #result = a[0], a[1], b[0]-a[0], b[1]-a[1]+1
 
-    return result 
+            arr.append(result)
+
+
+            #contours, hierarchy = cv2.findContours(image=edgeImage, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
+
+            #result = cv2.drawContours(image=originalImage.copy(), contours=contours, contourIdx=-1, color=(0, 255, 0), thickness=2, lineType=cv2.LINE_AA)
+    else:
+        result = originalImage 
+        #result = 0,0,0,0
+        arr.append(result)
+
+
+        
+    return result

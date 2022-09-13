@@ -1,21 +1,24 @@
 import numpy as np
+from readImage import *
+from findLetterCandidates import *
+import numpy as np
 
-imagePath = "images/tiny.jpg"
+imagePath = "images/scene3/lfsosa_12.08.2002/IMG_2471.JPG"
 #imagePath = "scene2/ryoungt_05.08.2002/PICT0017.JPG" 
 '''getting original image'''
-originalImage = Read.getImage(imagePath)
+originalImage = getImage(imagePath)
 '''getting image as grayscale'''
-grayImage = Read.getImageAsGrayScale(imagePath)
+grayImage =getImageAsGrayScale(imagePath)
 '''calculating gradient directions'''
-gradientDirections = Read.getGradientDirections(grayImage) 
+gradientDirections =getGradientDirections(grayImage) 
 '''detecting edge pixels'''
-edgeImage = Read.get_edges_Otsu(grayImage) 
+edgeImage = get_edges_Otsu(grayImage) 
 
 direction = 1
 
 
 def SWT_apply_parallel(arr):
-    copy_SW_Map = np.copy(Read.initialize_SW_Map(edgeImage))
+    copy_SW_Map = np.copy(initialize_SW_Map(edgeImage))
     start , end =  arr[0], arr[len(arr)-1]
 
     parallelEdgeImage = edgeImage[start:end]
@@ -62,11 +65,27 @@ def SWT_apply_parallel(arr):
             
                 
     for ray in rays:
+        counter = 0
         median = np.median([copy_SW_Map[y, x] for (y, x) in ray])
         for (y, x) in ray:
-            copy_SW_Map[y, x] = min(median, copy_SW_Map[y, x]) 
+            try:
+                leftN = copy_SW_Map[y,x-1]
+                aboveN = copy_SW_Map[y-1,x]
+                bottomN = copy_SW_Map[y+1,x] 
+                rightN = copy_SW_Map[y,x+1]
 
-    copy_SW_Map[copy_SW_Map == np.Infinity] = 0
+                if len([i for i in [leftN,aboveN,bottomN,rightN] if i== float("inf")]) >= 2:
+                    counter = counter + 1
+            except IndexError:
+                continue
+        if counter < len(ray)/2:
+            for (y, x) in ray:
+                copy_SW_Map[y, x] = min(median, copy_SW_Map[y, x])
+                #pass
+        else:
+            for (y, x) in ray:
+                copy_SW_Map[y, x] = float("inf")            
+
  
 
     return copy_SW_Map[start:end]

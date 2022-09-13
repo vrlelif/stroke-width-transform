@@ -3,12 +3,10 @@ import numpy as np
 def SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1):
 
     edgePointRows, edgePointCols =  np.nonzero(edgeImage) 
-  
     rays = [] 
-
-    for index,j in enumerate(edgePointRows):
-
+    for index in range(len(edgePointRows)):
         i = edgePointCols[index]
+        j = edgePointRows[index]
         
         startGradient = gradientDirections[j, i]  
 
@@ -42,13 +40,13 @@ def SWT_apply(edgeImage, SW_Map, gradientDirections , direction = 1):
                     rays.append(ray) 
                 break
             
-                
+   
     for ray in rays:
         median = np.median([SW_Map[y, x] for (y, x) in ray])
         for (y, x) in ray:
             SW_Map[y, x] = min(median, SW_Map[y, x]) 
 
-    SW_Map[SW_Map == np.Infinity] = 0
+    SW_Map[SW_Map == np.Infinity] = float("inf")
  
 
     return SW_Map
