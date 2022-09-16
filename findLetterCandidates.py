@@ -6,7 +6,7 @@ def getDivision(x,y):
     except Exception: 
         pass
 
-def CC(SWT, direction, originalImage ):
+def CC(SWT, direction):
     label = 0  
     component_map =  np.zeros(SWT.shape)
     components = {}
@@ -91,28 +91,27 @@ def findLetterCandidates(component_map, components , SWTResult, originalImage):
         varianceRatio = (varianceV/averageV) < 2 
         aspectRatio = 0.1 <= aspect < 10
         diameterRatio = (median / diameter) < 15.00
-        heightV = 10 < height < 300
-        widthV =  10 < width < 300
+        heightV = 8 < height < 300
+        widthV =  8 < width < 300
         compCount = len(uniqueArr[uniqueArr != 0]) <= 3
-        '''
 
-        
         if not varianceRatio :
             continue
+        if not  heightV :
+            continue
+
+        '''
         if not  aspectRatio :
             continue
         if not  diameterRatio :
             continue
-
+         
         if not  compCount: 
             continue
-        
-        
-        if not  heightV :
-            continue
+        '''
+        '''
         if not  widthV :
             continue
-
         '''
 
         for p in components[component]:

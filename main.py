@@ -2,14 +2,18 @@ from findLetterCandidates import *
 from masking import masking
 import matplotlib.pyplot as plt
 import timeit
-from strokeWidthTransform import SWT_apply
-#from newStrokeWidthTransform import SWT_apply_new
-from newStrokeWidthTransformParallel import * 
+from SWT import *
 from  readImage import *
 from multiprocessing import Pool
-#from parallelSWT import *
 
 if __name__ == "__main__":
+
+    starttime2 = timeit.default_timer()
+
+    SW_Map = initialize_SW_Map(edgeImage)
+    SWTMap = SWT_new_normal(edgeImage, SW_Map, gradientDirections , direction = direction)
+    print(f"Normal SWT: {timeit.default_timer() - starttime2} for {SWTMap.shape}")
+
 
     processesCount = 10 # DECLARE NUMBER OF PROCESSORS
     p = Pool(processes = processesCount)   # CREATE POOL
@@ -21,25 +25,18 @@ if __name__ == "__main__":
         myRange = range(steps,steps+int(height/processesCount)+1) 
         ranges.append(myRange)
 
-    slices = p.map(SWT_apply_parallel,ranges) # CALL THE PROCESSORS 
+    starttime = timeit.default_timer()
 
-    #SWTMap = np.sum(slices, axis=0) 
-
+    slices = p.map(SWT_new_parallel,ranges) # CALL THE PROCESSORS 
 
     SWTMap = np.concatenate(slices, axis=0) 
 
+    print(f"Parallel SWT: {timeit.default_timer() - starttime} for {SWTMap.shape}")
 
-    '''
-    SWTMap = SWT_apply_new(edgeImage, SW_Map, gradientDirections , direction = direction)
-    print("SWT:", timeit.default_timer() - starttime)
 
-    '''
-    component_map , components  = CC(SWT=SWTMap,direction=direction,originalImage=originalImage)
+    component_map , components  = CC(SWT=SWTMap,direction=direction)
     
     component_map , components = findLetterCandidates(component_map , components, SWTMap, originalImage)   # CALL FIND LETTER CANDIDATES
-
-
-
 
 
     masked = masking(components,originalImage)
